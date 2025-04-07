@@ -1,0 +1,8 @@
+setwd("/Users/mwilson/Documents/GitHub/cooperation/data")
+df<-read.csv("ICS.csv")
+df
+setwd("/Users/mwilson/Documents/GitHub/cooperation/data")
+colnames(df)
+df$q_gender
+df$q_age
+ls
