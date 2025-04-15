@@ -44,15 +44,14 @@ df <- df %>% filter(pass1==1 & pass2==1)
 print(colnames(df))
 print(df %>% count(gender))
 print(df %>% count(race))
-#print(df %>% count(q_age))
 print(summary(df$age))
 print(df %>% group_by(gender) %>% summarize(avg_C0 = mean(C0), avg_C = mean(C), avg_R = mean(R), avg_forg = mean(p10)))
 print(df %>% group_by(race) %>% summarize(avg_C0 = mean(C0), avg_C = mean(C), avg_R = mean(R), avg_forg = mean(p10)))
 
 
 ########## regroup data
+df <- df %>% mutate(gender = ifelse(gender>2,3,gender))
 
-df <- df %>% mutate()
 ########## feature selection
 
 # find correlations - not finished
@@ -88,5 +87,12 @@ p4<- ggplot(df2, aes(x=as.factor(race), y=R)) +
   geom_violin(fill="slateblue", alpha=0.6) + 
   xlab("race") + geom_boxplot(fill="pink", alpha=0.3)
 
+p5<- ggplot(df2, aes(x=as.factor(crt), y=C)) + 
+  geom_violin(fill="slateblue", alpha=0.6) + 
+  xlab("CRT") + geom_boxplot(fill="pink", alpha=0.3)
+
+p6<- ggplot(df2, aes(x=as.factor(crt), y=R)) + 
+  geom_violin(fill="slateblue", alpha=0.6) + 
+  xlab("CRT") + geom_boxplot(fill="pink", alpha=0.3)
 
 
