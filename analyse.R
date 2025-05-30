@@ -6,19 +6,28 @@ library(tidymodels)
 #tidymodels_prefer()
 library(purrr)
 
-########### import data
+##### Output directory for figures
+
+if (!dir.exists('output/figures')){
+  dir.create('output/figures')
+} else {
+  
+}
+
+##### import data
 
 setwd("/Users/mwilson/Documents/GitHub/cooperation/data")
 df<- read.csv("ICS.csv", stringsAsFactors=FALSE)
 df2<- df
 
-########### clean data
+##### clean data
 
 # rename and rescale variables
 colnames(df)
 
 df <- df %>% rename(p11=coop_mexotx, p10=coop_mexoty, p01=coop_meyotx, p00=coop_meyoty,
-              p1=coop2, C0=coop1, race = q_race, gender = q_gender, age = q_age, disc = ddt_log_k) %>% mutate (p11=p11/100, p10=p10/100,p01=p01/100,p00=p00/100,p1=p1/100,C0=C0/100)
+              p1=coop2, C0=coop1, race = q_race, gender = q_gender, age = q_age, disc = ddt_log_k) %>% 
+        mutate (p11=p11/100, p10=p10/100,p01=p01/100,p00=p00/100,p1=p1/100,C0=C0/100)
 
 # remove derived variables
 df <- df %>% select(!Strategy)
@@ -42,9 +51,9 @@ df <- df %>% mutate (race = race %>% map(g))
 # must pass attention checks
 df <- df %>% filter(pass1==1 & pass2==1)
   
-# still many NA, deal with them in each analysis
+# still many NA, deal with them individually in each analysis
 
-########## preliminary data exploration
+##### preliminary data exploration
 
 print(colnames(df))
 print(df %>% count(gender))
@@ -53,46 +62,64 @@ print(summary(df$age))
 print(df %>% group_by(gender) %>% summarize(avg_C0 = mean(C0), avg_C = mean(C), avg_R = mean(R), avg_forg = mean(p10)))
 print(df %>% group_by(race) %>% summarize(avg_C0 = mean(C0), avg_C = mean(C), avg_R = mean(R), avg_forg = mean(p10)))
 
-########## regroup data
+#####regroup data
+
 df <- df %>% mutate(gender = ifelse(gender>2,3,gender))
 
-########## feature selection - do in more detail later
+##### feature selection - do in more detail later, uses domain knowledge and data
 
 cols = c("p1", "p11", "p01", "p10", "p00", "gender","age","race", "disc", "crt", 
          "IC", "nfc", "trust","C0", "C","R") 
 df2 <- df %>% select(all_of(cols))
 
-
-########## breakdown by groups
+##### breakdown by groups
 
 p1<- df2 %>% drop_na(gender) %>% ggplot(aes(x=as.factor(gender), y=C)) + 
   geom_violin(fill="slateblue", alpha=0.6) + 
   xlab("gender") + geom_boxplot(fill="pink", alpha=0.3)
 
+s <- ggsave("output/figures/violin_gender_C.png", width = 10, height = 10)
+
 p2<- df2 %>% drop_na(gender) %>% ggplot(aes(x=as.factor(gender), y=R))  +
   geom_violin(fill="slateblue", alpha=0.6) +
   xlab("gender") + geom_boxplot(fill="pink", alpha=0.3)
+
+s <- ggsave("output/figures/violin_gender_R.png", width = 10, height = 10)
 
 p3<- df2 %>% drop_na(race) %>% ggplot(aes(x=as.factor(race), y=C)) +
   geom_violin(fill="slateblue", alpha=0.6)  +
   xlab("race") + geom_boxplot(fill="pink", alpha=0.3)
 
+s <- ggsave("output/figures/violin_race_C.png", width = 10, height = 10)
+
 p4<- df2 %>% drop_na(race) %>% ggplot(aes(x=as.factor(race), y=R))  +
   geom_violin(fill="slateblue", alpha=0.6)  +
   xlab("race") + geom_boxplot(fill="pink", alpha=0.3)
+
+s <- ggsave("output/figures/violin_race_R.png", width = 10, height = 10)
 
 p5<- df2 %>% drop_na(crt) %>% ggplot(aes(x=as.factor(crt), y=C))  +
   geom_violin(fill="slateblue", alpha=0.6)  +
   xlab("CRT") + geom_boxplot(fill="pink", alpha=0.3)
 
+s <- ggsave("output/figures/violin_crt_C.png", width = 10, height = 10)
+
 p6<- df2 %>% drop_na(crt) %>% ggplot(aes(x=as.factor(crt), y=R)) +
   geom_violin(fill="slateblue", alpha=0.6) +
   xlab("CRT") + geom_boxplot(fill="pink", alpha=0.3)
 
-p7<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=C, color=factor(gender))) + stat_ecdf(geom = "step")
-p8<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=R, color=factor(gender))) + stat_ecdf(geom = "step")
-p9<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=crt, color=factor(gender))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/violin_crt_R.png", width = 10, height = 10)
 
+p7<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=C, color=factor(gender))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/ecdf_gender_C.png", width = 10, height = 10)
+
+p8<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=R, color=factor(gender))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/ecdf_gender_R.png", width = 10, height = 10)
+
+p9<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=crt, color=factor(gender))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/ecdf_gender_crt.png", width = 10, height = 10)
+
+1
 
 ############ can we predict anything interesting?
 
