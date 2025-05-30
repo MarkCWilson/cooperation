@@ -36,7 +36,10 @@ df <- df %>% mutate (race = race %>% map(f))
 
 # deal with multiple races
 # no answer vs white only vs at least one nonwhite
-g = function(v) {if(length(v)==0) {return(0)} else if (length(v)==1 && 1 %in% v) {return(v)} else {return(2)}} 
+g = function(v) {
+  if(length(v)==0) {return(0)} 
+  else if (length(v)==1 && 1 %in% v) {return(v)} else {return(2)}
+  } 
 df <- df %>% mutate (race = race %>% map(g))
 
 # must pass attention checks
