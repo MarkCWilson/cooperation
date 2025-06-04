@@ -33,13 +33,14 @@ a human opponent.
 
 <h2> Data </h2>
 The data was in pretty good shape in a flat CSV file, and little
-processing was needed. One tricky part was that the self-reported racial
-classification data could contain more than one race, and this data was
-presented as a string. In order to avoid having very small numbers in a
-given racial category, I decided in the end to distinguish only between
-those who identify as white (plus perhaps other races), which I called
-"white", and those who did not supply a "white" racial classification
-(``nonwhite").
+processing was needed (it had 52 columns, many of which are of marginal
+relevance, and we cut them down mostly by using domain knowledge). One
+tricky part was that the self-reported racial classification data could
+contain more than one race, and this data was presented as a string. In
+order to avoid having very small numbers in a given racial category, I
+decided in the end to distinguish only between those who identify as
+white (plus perhaps other races), which I called "white", and those who
+did not supply a "white" racial classification (``nonwhite").
 
 To describe game strategies, participants gave a
 probability (which we normalize to the range 0 to 1) of cooperating on
