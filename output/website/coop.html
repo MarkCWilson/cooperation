@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Correlates of cooperation</title>
+	<meta name="generator" content="BBEdit 15.1">
+	<style>
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body>
+
+<h1>Correlates of cooperation</h1>
+
+This project will evolve as I get more time to work on it, and the key
+data and code can be found on <a
+href="https://github.com/MarkCWilson/cooperation">Github</a>. All
+the code is in R, consistently using the tidyverse and tidymodels
+approach. The project comes from a paper with Antonio Arechar, An Jimenez, and 
+Fatemeh Ghaffari. Basically, over 1600 human participants supplied demographic information,
+and took one of two standard tests of inhibitory control  and a test of reasoning (the famous 3-question 
+(Cognitive Reflection Test). They then explained their strategies for playing Repeated Prisoner's Dilemma
+against a human opponent.
+<hr>
+
+<h2> Data </h2>
+The data was in pretty good shape in a flat CSV file, and little
+processing was needed. To describe game strategies, participants gave a
+probability (which we normalize to the range 0 to 1) of cooperating on
+the first round, and in each of the 4 scenarios based on the last move
+(e.g. I cooperated but my opponent defected).
+
+<hr>
+
+<h2> Derived data</h2>
+
+We devised two global measures intended to summarize player behavior.
+One is a simple measure C of cooperation, defined as the mean of the 5
+probabilities mentioned above. The other is more subtle, being a measure
+R of what we call reactivity (how much the player's probability of
+cooperation varies with the opponent's last move).
+
+
+<h2> Interesting findings</h2>
+
+When it comes to cooperativity, there are noticeable differences. There is not much difference between male and female, 
+but those who identify as white (plus perhaps other races) have markedly higher scores than those who do not supply a 
+ "white" racial classification.
+<p>
+<img src="../figures/violin_crt_C.png" alt="C vs CRT violin plot"  style="display:inline-block;width:30%">
+<img src="../figures/violin_gender_C.png" alt="C vs CRT violin plot"  style="display:inline-block;width:30%">
+<img src="../figures/violin_race_C.png" alt="C vs CRT violin plot"  style="display:inline-block;width:30%">
+>
+<p>
+Interestingly, there appears to be a difference between male and female participants when it comes 
+to reactivity, and higher scores for white vs nonwhite classification. The biggest effect is seen when comparing those 
+having low CRT scores with the highest scorers.
+<p>
+<img src="../figures/violin_crt_R.png" alt="R vs CRT violin plot"  style="display:inline-block;width:30%">
+<img src="../figures/violin_gender_R.png" alt="R vs CRT violin plot"  style="display:inline-block;width:30%">
+<img src="../figures/violin_race_R.png" alt="R vs CRT violin plot"  style="display:inline-block;width:30%">
+
+<p>
+
+<hr>
+ 
+ <h2> Prediction</h2>
+ 
+We can try to classify whether a subject is male or female, for example, based on ****.
+ 
+<hr>
+<h2> Possible improvements and extensions </h2>
+
+Some obvious ideas for refining the predictions:
+<ul>
+<li>
+</ul>
+
+Some extensions:
+<ul>
+<li>
+</ul>
+
+<hr> Last update 2025-06-02.
+
+</body>
+</html>
