@@ -112,22 +112,22 @@ s <- ggsave("output/figures/ecdf_gender_C.png", width = 10, height = 10)
 p8<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=R, color=factor(gender))) + stat_ecdf(geom = "step")
 s <- ggsave("output/figures/ecdf_gender_R.png", width = 10, height = 10)
 
-p9<- df2 %>% drop_na(gender) %>% group_by(gender) %>% ggplot(aes(y=crt, color=factor(gender))) + stat_ecdf(geom = "step")
-s <- ggsave("output/figures/ecdf_gender_crt.png", width = 10, height = 10)
+p9<- df2 %>% drop_na(crt) %>% group_by(crt) %>% ggplot(aes(y=C, color=factor(crt))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/ecdf_crt_C.png", width = 10, height = 10)
 
-p10<- df2 %>% drop_na(race) %>% group_by(race) %>% ggplot(aes(y=C, color=factor(race))) + stat_ecdf(geom = "step")
+p10<- df2 %>% drop_na(crt) %>% group_by(crt) %>% ggplot(aes(y=R, color=factor(crt))) + stat_ecdf(geom = "step")
+s <- ggsave("output/figures/ecdf_crt_R.png", width = 10, height = 10)
+
+p11<- df2 %>% drop_na(race) %>% group_by(race) %>% ggplot(aes(y=C, color=factor(race))) + stat_ecdf(geom = "step")
 s <- ggsave("output/figures/ecdf_race_C.png", width = 10, height = 10)
 
-p11<- df2 %>% drop_na(race) %>% group_by(race) %>% ggplot(aes(y=R, color=factor(race))) + stat_ecdf(geom = "step")
+p12<- df2 %>% drop_na(race) %>% group_by(race) %>% ggplot(aes(y=R, color=factor(race))) + stat_ecdf(geom = "step")
 s <- ggsave("output/figures/ecdf_race_R.png", width = 10, height = 10)
-
-p12<- df2 %>% drop_na(race) %>% group_by(race) %>% ggplot(aes(y=crt, color=factor(race))) + stat_ecdf(geom = "step")
-s <- ggsave("output/figures/ecdf_race_crt.png", width = 10, height = 10)
 
 
 ############ can we predict anything interesting?
 
-# may need to exclude genders other than 1 & 2
+# exclude genders other than 1 & 2
 # looks like many other NA to remove, coming in prediction of race, why?
 
 df2 <- df2 %>% drop_na(gender) %>%
@@ -135,11 +135,14 @@ df2 <- df2 %>% drop_na(gender) %>%
   filter(gender == 1 | gender == 2) %>% droplevels()
 
 df2 <- df2 %>% drop_na(race) %>%
-  filter(race == 1 | race == 2) %>%droplevels()
+  filter(race == 1 | race == 2) %>%droplevels() %>% drop_na()
 
 set.seed(222)
 # split into training and testing 
-data_split <- initial_split(df2, prop = 3/4)
+
+df3 <- df2 %>% select(C,R,gender,age,race,crt)
+  
+data_split <- initial_split(df3, prop = 3/4)
 
 # create data frames for the two sets
 train_data <- training(data_split)
@@ -147,13 +150,13 @@ test_data  <- testing(data_split)
 
 gender_rec <- 
   recipe(gender ~ ., data = train_data) %>% 
-  update_role(age,race,disc,new_role = "ID") %>% 
+  update_role(age,race, new_role = "ID") %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors())
 
 race_rec <- 
   recipe(race ~ ., data = train_data) %>% 
-  update_role(age,gender,disc,new_role = "ID") %>% 
+  update_role(age,gender,new_role = "ID") %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors())
 
@@ -240,7 +243,6 @@ show(resultsg)
 show(cmg)
 
 ############ classify race from crt, C, R
-
 
 metrics <- metric_set(accuracy, precision, recall)
 resultsr <- p %>% metrics(race, estimate = pred_race)
